@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  FleetManager
+  Driver
+  SafetyOfficer
+  FinancialAnalyst
+}
+
+enum VehicleType {
+  Van
+  Truck
+  Pickup
+  Bus
+  Trailer
+}
+
+enum VehicleStatus {
+  Available
+  OnTrip
+  InShop
+  Retired
+}
+
+enum LicenseCategory {
+  LMV
+  HMV
+  MCWG
+}
+
+enum DriverStatus {
+  Available
+  OnTrip
+  OffDuty
+  Suspended
+}
+
+enum TripStatus {
+  Draft
+  Dispatched
+  Completed
+  Cancelled
+}
+
+enum MaintenanceStatus {
+  Open
+  Closed
+}
+
+enum MaintenanceType {
+  OilChange
+  TyreReplacement
+  BrakeService
+  EngineRepair
+  Inspection
+  Other
+}
+
+enum ExpenseType {
+  Toll
+  Parking
+  Fine
+  Permit
+  Other
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(Driver)
+  createdAt    DateTime @default(now())
+  trips        Trip[]   @relation("CreatedBy")
+
+  @@index([email])
+}
+
+model Vehicle {
+  id              String        @id @default(uuid())
+  regNo           String        @unique
+  name            String
+  type            VehicleType
+  maxLoad         Int
+  odometer        Int           @default(0)
+  acquisitionCost Decimal       @db.Decimal(12, 2)
+  status          VehicleStatus @default(Available)
+  region          String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  trips        Trip[]
+  maintenance  MaintenanceLog[]
+  fuelLogs     FuelLog[]
+  expenses     Expense[]
+
+  @@index([regNo])
+  @@index([status])
+}
+
+model Driver {
+  id              String       @id @default(uuid())
+  name            String
+  licenseNumber   String       @unique
+  licenseCategory LicenseCategory
+  licenseExpiry   DateTime
+  contact         String
+  safetyScore     Int          @default(90)
+  status          DriverStatus @default(Available)
+  lastReminderAt  DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  trips Trip[]
+
+  @@index([licenseNumber])
+  @@index([status])
+  @@index([licenseExpiry])
+}
+
+model Trip {
+  id              String     @id @default(uuid())
+  source          String
+  destination     String
+  vehicleId       String
+  driverId        String
+  cargoWeight     Int
+  plannedDistance Int
+  status          TripStatus @default(Draft)
+  finalOdometer   Int?
+  fuelConsumed    Decimal?   @db.Decimal(8, 2)
+  createdById     String
+  createdAt       DateTime   @default(now())
+  dispatchedAt    DateTime?
+  completedAt     DateTime?
+
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  driver    Driver  @relation(fields: [driverId], references: [id])
+  createdBy User    @relation("CreatedBy", fields: [createdById], references: [id])
+
+  @@index([status])
+  @@index([vehicleId])
+  @@index([driverId])
+}
+
+model MaintenanceLog {
+  id          String            @id @default(uuid())
+  vehicleId   String
+  type        MaintenanceType
+  description String?
+  cost        Decimal           @db.Decimal(12, 2)
+  date        DateTime
+  status      MaintenanceStatus @default(Open)
+  createdAt   DateTime          @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId])
+  @@index([status])
+}
+
+model FuelLog {
+  id        String   @id @default(uuid())
+  vehicleId String
+  liters    Decimal  @db.Decimal(8, 2)
+  cost      Decimal  @db.Decimal(12, 2)
+  date      DateTime
+  createdAt DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId])
+}
+
+model Expense {
+  id        String      @id @default(uuid())
+  vehicleId String
+  type      ExpenseType
+  amount    Decimal     @db.Decimal(12, 2)
+  note      String?
+  date      DateTime
+  createdAt DateTime    @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId])
+}
