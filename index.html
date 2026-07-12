@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransitOps — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=3">
+<style>
+/* ── Auth-page override: teal + white palette ── */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+}
+
+/* ════════════════════════════════
+   LEFT PANEL
+════════════════════════════════ */
+.lp-left {
+  background: linear-gradient(145deg, #042e2d 0%, #065f5b 55%, #0a9e97 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 72px 64px 80px;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* subtle dot-grid texture */
+.lp-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* glow blob */
+.lp-left::after {
+  content: '';
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(13,191,184,.22) 0%, transparent 70%);
+  top: -80px; right: -100px;
+  pointer-events: none;
+}
+
+.lp-logo {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 52px;
+  position: relative;
+  z-index: 1;
+}
+.lp-logo-icon {
+  width: 46px; height: 46px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.lp-logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.4px;
+  line-height: 1.2;
+}
+.lp-logo-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.lp-headline {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.16;
+  letter-spacing: -.6px;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+.lp-headline span {
+  color: #5eede8;
+}
+.lp-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,.62);
+  line-height: 1.7;
+  max-width: 400px;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Steps */
+.lp-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+.lp-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.lp-step:last-child { border-bottom: none; }
+.lp-step-num {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #5eede8;
+}
+.lp-step-body { display: flex; flex-direction: column; gap: 4px; }
+.lp-step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+}
+.lp-step-desc {
+  font-size: 13.5px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.55;
+}
+
+.lp-footer {
+  position: absolute;
+  bottom: 28px;
+  left: 64px;
+  font-size: 12px;
+  color: rgba(255,255,255,.28);
+  letter-spacing: .3px;
+  z-index: 1;
+}
+
+/* ════════════════════════════════
+   RIGHT PANEL
+════════════════════════════════ */
+.lp-right {
+  background: #f8fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 52px;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+.lp-form-wrap {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px 36px 32px;
+  box-shadow: 0 4px 32px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+  border: 1px solid #e8f0ef;
+}
+
+.lp-tabs {
+  display: flex;
+  background: #f0f4f4;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+  gap: 4px;
+}
+.lp-tab {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: 'Inter', sans-serif;
+}
+.lp-tab.active {
+  background: #fff;
+  color: #0a7a75;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+.lp-tab:not(.active):hover { color: #334155; }
+
+.lp-form-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d1f1e;
+  margin-bottom: 6px;
+  letter-spacing: -.4px;
+  line-height: 1.2;
+}
+.lp-form-sub {
+  font-size: 14.5px;
+  color: #5f7a78;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.lp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+.lp-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d4a48;
+  letter-spacing: .1px;
+}
+.lp-field input,
+.lp-field select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #d4e4e2;
+  border-radius: 9px;
+  font-size: 14.5px;
+  font-family: 'Inter', sans-serif;
+  color: #0d1f1e;
+  background: #fff;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.lp-field input::placeholder { color: #9ab5b3; }
+.lp-field input:focus,
+.lp-field select:focus {
+  border-color: #0DBFB8;
+  box-shadow: 0 0 0 3px rgba(13,191,184,.12);
+}
+
+.lp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+.lp-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #4a6462;
+  cursor: pointer;
+  user-select: none;
+}
+.lp-check input {
+  width: 15px; height: 15px;
+  accent-color: #0DBFB8;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.lp-link {
+  background: none;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0a7a75;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+.lp-link:hover { text-decoration: underline; }
+
+.lp-msg {
+  font-size: 13.5px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.lp-msg.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 10px 13px;
+}
+.lp-msg.success {
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 10px 13px;
+}
+.lp-msg:empty { display: none; }
+
+.lp-btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(180deg, #2EDDD6, #0DBFB8);
+  color: #021a19;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all .15s;
+  box-shadow: 0 4px 16px rgba(13,191,184,.38);
+  letter-spacing: .1px;
+}
+.lp-btn-primary:hover {
+  background: linear-gradient(180deg, #3ef0e8, #2EDDD6);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(13,191,184,.5);
+}
+.lp-btn-primary:active { transform: translateY(0); }
+
+.lp-demo {
+  margin-top: 22px;
+  border: 1.5px solid #d4e4e2;
+  border-radius: 11px;
+  overflow: hidden;
+}
+.lp-demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 15px;
+  background: #f0fdfb;
+  border-bottom: 1.5px solid #d4e4e2;
+}
+.lp-demo-header span {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #2d4a48;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.lp-demo-header code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #0a7a75;
+  background: #e0f7f5;
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid #99f0ec;
+}
+.lp-demo-roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.lp-demo-role {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 15px;
+  border-right: 1px solid #d4e4e2;
+  border-bottom: 1px solid #d4e4e2;
+  cursor: pointer;
+  transition: background .12s;
+}
+.lp-demo-role:nth-child(2n) { border-right: none; }
+.lp-demo-role:nth-child(3),
+.lp-demo-role:nth-child(4) { border-bottom: none; }
+.lp-demo-role:hover { background: #f0fdfb; }
+.lp-demo-role-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.lp-demo-role-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a3330;
+  line-height: 1.3;
+}
+.lp-demo-role-email {
+  font-size: 11.5px;
+  color: #7a9e9c;
+  margin-top: 2px;
+}
+
+.lp-footnote {
+  text-align: center;
+  font-size: 12.5px;
+  color: #8aacaa;
+  margin-top: 24px;
+}
+
+@media (max-width: 960px) {
+  .login-page { grid-template-columns: 1fr; }
+  .lp-left { display: none; }
+  .lp-right { padding: 48px 28px; background: #fff; }
+  .lp-form-wrap { box-shadow: none; border: none; padding: 0; max-width: 440px; }
+}
+@media (max-width: 520px) {
+  .lp-right { padding: 32px 20px; }
+  .lp-form-wrap { padding: 0; }
+  .lp-demo-roles { grid-template-columns: 1fr; }
+  .lp-demo-role { border-right: none !important; }
+  .lp-demo-role:nth-child(3) { border-bottom: 1px solid #d4e4e2; }
+  .lp-demo-role:nth-child(4) { border-bottom: none; }
+}
+</style>
+</head>
+<body style="margin:0; background:#fff;">
+
+<div class="login-page">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="lp-left">
+
+    <div class="lp-logo">
+      <div class="lp-logo-icon">
+        <svg width="22" height="22" viewBox="0 0 34 34" fill="none">
+          <path d="M4 22L14 8H30L20 22H4Z" stroke="#5eede8" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M9 27L19 13H30" stroke="#5eede8" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="lp-logo-text">TransitOps</div>
+        <div class="lp-logo-badge">Fleet Management</div>
+      </div>
+    </div>
+
+    <h1 class="lp-headline">Every vehicle,<br>driver &amp; mile —<br><span>tracked.</span></h1>
+    <p class="lp-sub">Dispatch, maintenance, fuel and safety compliance — unified in one smart operations console.</p>
+
+    <div class="lp-steps">
+      <div class="lp-step">
+        <div class="lp-step-num">01</div>
+        <div class="lp-step-body">
+          <div class="lp-step-title">Register vehicles &amp; drivers</div>
+          <div class="lp-step-desc">Add your fleet assets and driver profiles with license &amp; compliance data.</div>
+        </div>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-num">02</div>
+        <div class="lp-step-body">
+          <div class="lp-step-title">Dispatch &amp; track trips</div>
+          <div class="lp-step-desc">Assign vehicles, set routes and monitor live trip status in real time.</div>
+        </div>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-num">03</div>
+        <div class="lp-step-body">
+          <div class="lp-step-title">Close out &amp; review costs</div>
+          <div class="lp-step-desc">Log fuel, expenses and maintenance — then analyse ROI per vehicle.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lp-footer">TransitOps · Smart Transport Operations Platform</div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="lp-right">
+    <div class="lp-form-wrap">
+
+      <!-- Tabs -->
+      <div class="lp-tabs" role="tablist">
+        <button class="lp-tab active" id="tabSignin">Sign in</button>
+        <button class="lp-tab" id="tabSignup">Create account</button>
+      </div>
+
+      <!-- SIGN IN FORM -->
+      <form id="signinForm" novalidate>
+        <div class="lp-form-title">Welcome back</div>
+        <div class="lp-form-sub">Sign in to your operations account.</div>
+
+        <div class="lp-field">
+          <label for="siEmail">Email address</label>
+          <input type="email" id="siEmail" placeholder="you@fleetco.com" autocomplete="username" required>
+        </div>
+
+        <div class="lp-field">
+          <label for="siPassword">Password</label>
+          <input type="password" id="siPassword" placeholder="Enter your password" autocomplete="current-password" required>
+        </div>
+
+        <div class="lp-row">
+          <label class="lp-check">
+            <input type="checkbox" id="siRemember"> Remember me
+          </label>
+          <button type="button" class="lp-link" id="fillDemo">Use demo account</button>
+        </div>
+
+        <div class="lp-msg" id="siMsg"></div>
+
+        <button type="submit" class="lp-btn-primary">Sign in to TransitOps</button>
+
+        <!-- Demo roles -->
+        <div class="lp-demo">
+          <div class="lp-demo-header">
+            <span>Demo accounts</span>
+            <code>demo1234</code>
+          </div>
+          <div class="lp-demo-roles">
+            <div class="lp-demo-role" data-email="fleet@transitops.io">
+              <div class="lp-demo-role-dot" style="background:#0DBFB8;"></div>
+              <div class="lp-demo-role-info">
+                <div class="lp-demo-role-name">Fleet Manager</div>
+                <div class="lp-demo-role-email">fleet@transitops.io</div>
+              </div>
+            </div>
+            <div class="lp-demo-role" data-email="driver@transitops.io">
+              <div class="lp-demo-role-dot" style="background:#16a34a;"></div>
+              <div class="lp-demo-role-info">
+                <div class="lp-demo-role-name">Driver</div>
+                <div class="lp-demo-role-email">driver@transitops.io</div>
+              </div>
+            </div>
+            <div class="lp-demo-role" data-email="safety@transitops.io">
+              <div class="lp-demo-role-dot" style="background:#d97706;"></div>
+              <div class="lp-demo-role-info">
+                <div class="lp-demo-role-name">Safety Officer</div>
+                <div class="lp-demo-role-email">safety@transitops.io</div>
+              </div>
+            </div>
+            <div class="lp-demo-role" data-email="finance@transitops.io">
+              <div class="lp-demo-role-dot" style="background:#7c3aed;"></div>
+              <div class="lp-demo-role-info">
+                <div class="lp-demo-role-name">Financial Analyst</div>
+                <div class="lp-demo-role-email">finance@transitops.io</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- SIGN UP FORM -->
+      <form id="signupForm" novalidate style="display:none;">
+        <div class="lp-form-title">Create account</div>
+        <div class="lp-form-sub">Set up access for your operations team.</div>
+
+        <div class="lp-field">
+          <label for="suName">Full name</label>
+          <input type="text" id="suName" placeholder="Alex Rivera" required>
+        </div>
+
+        <div class="lp-field">
+          <label for="suEmail">Work email</label>
+          <input type="email" id="suEmail" placeholder="you@fleetco.com" required>
+        </div>
+
+        <div class="lp-field">
+          <label for="suRole">Role</label>
+          <select id="suRole" required>
+            <option value="FleetManager">Fleet Manager</option>
+            <option value="Driver">Driver</option>
+            <option value="SafetyOfficer">Safety Officer</option>
+            <option value="FinancialAnalyst">Financial Analyst</option>
+          </select>
+        </div>
+
+        <div class="lp-field">
+          <label for="suPassword">Password</label>
+          <input type="password" id="suPassword" placeholder="At least 8 characters" required>
+        </div>
+
+        <div class="lp-field">
+          <label for="suPassword2">Confirm password</label>
+          <input type="password" id="suPassword2" placeholder="Re-enter password" required>
+        </div>
+
+        <div class="lp-msg" id="suMsg"></div>
+
+        <button type="submit" class="lp-btn-primary">Create account</button>
+      </form>
+
+      <div class="lp-footnote">© 2025 TransitOps · Smart Transport Operations Platform</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/data.js"></script>
+<script>
+(function(){
+  /* ── theme ── */
+  const theme = localStorage.getItem('transitops_theme') || 'dark';
+  /* login page is always light — no override needed */
+
+  /* ── redirect if already logged in ── */
+  const existing = DataStore.currentUser();
+  if(existing){ window.location.href = 'app.html'; }
+
+  /* ── tab switching ── */
+  const tabSignin  = document.getElementById('tabSignin');
+  const tabSignup  = document.getElementById('tabSignup');
+  const signinForm = document.getElementById('signinForm');
+  const signupForm = document.getElementById('signupForm');
+
+  function showTab(tab){
+    const isSignin = tab === 'signin';
+    tabSignin.classList.toggle('active', isSignin);
+    tabSignup.classList.toggle('active', !isSignin);
+    signinForm.style.display = isSignin ? '' : 'none';
+    signupForm.style.display = isSignin ? 'none' : '';
+  }
+  tabSignin.addEventListener('click', () => showTab('signin'));
+  tabSignup.addEventListener('click', () => showTab('signup'));
+
+  function setMsg(el, text, type){
+    el.textContent = text;
+    el.className = 'lp-msg' + (type ? ' ' + type : '');
+  }
+
+  /* ── demo role click-to-fill ── */
+  document.querySelectorAll('.lp-demo-role').forEach(card => {
+    card.addEventListener('click', () => {
+      document.getElementById('siEmail').value = card.dataset.email;
+      document.getElementById('siPassword').value = 'demo1234';
+      setMsg(document.getElementById('siMsg'), '', '');
+    });
+  });
+
+  /* ── fill demo button ── */
+  document.getElementById('fillDemo').addEventListener('click', () => {
+    document.getElementById('siEmail').value = 'fleet@transitops.io';
+    document.getElementById('siPassword').value = 'demo1234';
+    setMsg(document.getElementById('siMsg'), '', '');
+  });
+
+  /* ── sign in ── */
+  const siMsg = document.getElementById('siMsg');
+  signinForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('siEmail').value.trim().toLowerCase();
+    const pass  = document.getElementById('siPassword').value;
+    const user  = DataStore.all('users').find(u => u.email.toLowerCase() === email);
+    if(!user){ setMsg(siMsg, 'No account found for this email.', 'error'); return; }
+    if(user.password !== pass){ setMsg(siMsg, 'Incorrect password. Please try again.', 'error'); return; }
+    DataStore.setSession(user.id);
+    setMsg(siMsg, 'Signed in — redirecting…', 'success');
+    setTimeout(() => { window.location.href = 'app.html'; }, 300);
+  });
+
+  /* ── sign up ── */
+  const suMsg = document.getElementById('suMsg');
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name  = document.getElementById('suName').value.trim();
+    const email = document.getElementById('suEmail').value.trim().toLowerCase();
+    const role  = document.getElementById('suRole').value;
+    const pass  = document.getElementById('suPassword').value;
+    const pass2 = document.getElementById('suPassword2').value;
+    if(name.length < 2){ setMsg(suMsg, 'Please enter your full name.', 'error'); return; }
+    if(!/^\S+@\S+\.\S+$/.test(email)){ setMsg(suMsg, 'Please enter a valid email address.', 'error'); return; }
+    if(pass.length < 8){ setMsg(suMsg, 'Password must be at least 8 characters.', 'error'); return; }
+    if(pass !== pass2){ setMsg(suMsg, 'Passwords do not match.', 'error'); return; }
+    if(DataStore.all('users').some(u => u.email.toLowerCase() === email)){
+      setMsg(suMsg, 'An account with this email already exists.', 'error'); return;
+    }
+    const user = DataStore.insert('users', { name, email, password: pass, role });
+    DataStore.setSession(user.id);
+    setMsg(suMsg, 'Account created — redirecting…', 'success');
+    setTimeout(() => { window.location.href = 'app.html'; }, 400);
+  });
+})();
+</script>
+</body>
+</html>

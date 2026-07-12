@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransitOps — Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body class="app-body">
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand-mark small">
+        <svg width="26" height="26" viewBox="0 0 34 34" fill="none">
+          <path d="M4 22L14 8H30L20 22H4Z" stroke="#0DBFB8" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M9 27L19 13H30" stroke="#0DBFB8" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <span>TransitOps</span>
+      </div>
+      <button class="sidebar-collapse" id="collapseBtn" title="Collapse">
+        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"><!-- injected --></nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-chip" id="userChip">
+        <div class="avatar" id="userAvatar">?</div>
+        <div class="user-meta">
+          <div class="user-name" id="userName">—</div>
+          <div class="user-role" id="userRole">—</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block" id="logoutBtn">
+        <svg width="15" height="15" viewBox="0 0 16 16"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Log out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-only" id="mobileMenuBtn">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <h1 id="pageTitle">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="live-dot"></span>
+        <span class="topbar-time" id="topbarTime"></span>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <!-- page content injected here -->
+    </main>
+  </div>
+</div>
+
+<!-- Modal root -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<!-- Toast root -->
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/pages/dashboard.js"></script>
+<script src="js/pages/vehicles.js"></script>
+<script src="js/pages/drivers.js"></script>
+<script src="js/pages/trips.js"></script>
+<script src="js/pages/maintenance.js"></script>
+<script src="js/pages/fuel.js"></script>
+<script src="js/pages/reports.js"></script>
+<script src="js/pages/settings.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
